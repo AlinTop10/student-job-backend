@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "module": "nodenext",
+    "moduleResolution": "nodenext", // Important pentru nodenext
+    "target": "esnext",
+    
+    // Dezactivează sau pune pe false linia asta:
+    "verbatimModuleSyntax": false, 
+    
+    "esModuleInterop": true, // Permite importul modulelor CommonJS ca ES6
+    "skipLibCheck": true,
+    "strict": true,
+    "sourceMap": true,
+    "declaration": true,
+    "rootDir": "./src",
+    "outDir": "./dist"
+  }
+}
