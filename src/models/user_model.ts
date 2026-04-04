@@ -8,8 +8,8 @@ class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
     declare email: string;
     declare password: string;
     declare created_at: CreationOptional<Date>;
-    // declare isActivated: boolean;
-    // declare activationLink: string
+    declare isActivated: CreationOptional<boolean>;
+    declare activationLink: CreationOptional<string>;
 }
 
 User.init(
@@ -40,13 +40,13 @@ User.init(
             type: DataTypes.DATE,
             defaultValue: DataTypes.NOW,
         },
-        // isActivated:{
-        //     type: DataTypes.BOOLEAN,
-        //     defaultValue: false 
-        // },
-        // activationLink:{
-        //     type: DataTypes.STRING
-        // }
+        isActivated:{
+            type: DataTypes.BOOLEAN,
+            defaultValue: false 
+        },
+        activationLink:{
+            type: DataTypes.STRING
+        }
     },
     {
         sequelize, // Instanța de conexiune

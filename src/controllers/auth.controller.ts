@@ -2,31 +2,23 @@ import { Request, Response } from "express";
 import { User } from "../models/user_model";
 import { error } from "node:console";
 import bcrypt from "bcrypt";
+import userService from '../service/user-service';;
 
-const register = async ( req: Request, res: Response ) => {
 
-    const { email, password, nume, telefon} = req.body;
-
+const register = async ( req: Request, res: Response, ) => {
     try{
-        const candidat = await User.findOne({where: { email }});
+        const { email, password, nume, telefon} = req.body;
 
-        if(candidat){
-            return res.status(409).json({ message: 'User with this email already exists' });
-        }
 
-        const salt = await bcrypt.genSalt(10);
-        const hashedPassword = await bcrypt.hash(password, salt);
-
-        const user = await User.create({
-            email,
-            password: hashedPassword,
-            nume,
-            telefon
-        });
-        res.status(201).json({ message: 'User created successfully' });
+        const userData = await userService.registration(email, password, nume, telefon);
+    
+        res.cookie('refreshToken', userData.refreshToken, {
+            maxAge: 30 * 24 * 60 * 60 * 1000,
+        })
+        return res.json(userData);
     } catch (error) {
         console.error('Eroare la legare:', error);
-        res.status(500).json({ message: "Internal server error"});
+        res.status(400).json({ message: (error as Error).message });
     }
 
 };
