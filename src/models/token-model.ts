@@ -2,14 +2,14 @@ import { Model, DataTypes, InferAttributes, InferCreationAttributes, CreationOpt
 import { sequelize } from '../db'; 
 
 class Tokens extends Model<InferAttributes<Tokens>, InferCreationAttributes<Tokens>> {
-    declare idToken: CreationOptional<number>; // CreationOptional înseamnă că e Auto-Increment (nu-l trimiți tu)
+    declare id: CreationOptional<number>; // CreationOptional înseamnă că e Auto-Increment (nu-l trimiți tu)
     declare user: string;
     declare refreshToken: string;
 }
 
 Tokens.init(
     {
-        idToken: {
+        id: {
             type: DataTypes.INTEGER.UNSIGNED,
             autoIncrement: true,
             primaryKey: true,
@@ -26,6 +26,7 @@ Tokens.init(
     {
         sequelize, // Instanța de conexiune
         tableName: 'tokens',
+        timestamps: false, // Dacă în MySQL ai doar created_at, nu și updatedAt
     }
 );
 
