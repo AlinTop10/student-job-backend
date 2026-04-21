@@ -43,9 +43,12 @@ const login = async ( req: Request, res: Response, next: NextFunction ) => {
 
 const logout = async ( req: Request, res: Response, next: NextFunction ) => {
     try{
-
-    }catch(error){
-
+        const {refreshToken} = req.cookies;
+        const token = await userService.logout(refreshToken);
+        res.clearCookie('refreshToken');
+        return res.json(token);
+    } catch (error: unknown) {
+        next(error);
     }
 }
 
@@ -77,4 +80,4 @@ const getUsers = async ( req: Request, res: Response, next: NextFunction ) => {
     }
 }
 
-export { register, activate, login }
+export { register, activate, login, logout }
