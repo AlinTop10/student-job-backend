@@ -1,11 +1,12 @@
-import { Request, Response } from "express";
+import { Request, Response,  NextFunction } from "express";
 import { User } from "../models/user_model";
 import { error } from "node:console";
 import bcrypt from "bcrypt";
-import userService from '../service/user-service';;
+import userService from '../service/user-service';import { nextTick } from "node:process";
+;
 
 
-const register = async ( req: Request, res: Response, ) => {
+const register = async ( req: Request, res: Response, next: NextFunction ) => {
     try{
         const { email, password, nume, telefon} = req.body;
 
@@ -17,14 +18,13 @@ const register = async ( req: Request, res: Response, ) => {
             httpOnly: true
         })
         return res.json(userData);
-    } catch (error) {
-        console.error('Eroare la legare:', error);
-        res.status(400).json({ message: (error as Error).message });
+    } catch (error: unknown) {
+        next(error);
     }
 
 };
 
-const login = async (req: Request, res: Response) => {
+const login = async ( req: Request, res: Response, next: NextFunction ) => {
     try{
 
     }catch(error){
@@ -32,7 +32,7 @@ const login = async (req: Request, res: Response) => {
     }
 }
 
-const logout = async (req: Request, res: Response) => {
+const logout = async ( req: Request, res: Response, next: NextFunction ) => {
     try{
 
     }catch(error){
@@ -40,20 +40,19 @@ const logout = async (req: Request, res: Response) => {
     }
 }
 
-const activate = async (req: Request<{ link: string }>, res: Response) => {
+const activate = async (req: Request<{ link: string }>, res: Response, next: NextFunction) => {
     try {
         const activationLink = req.params.link;
         await userService.activate(activationLink);
 
         return res.redirect(process.env.CLIENT_URL || 'https://www.youtube.com')
-    } catch (error) {
-        return res.status(400).json({
-            message: (error as Error).message
-        });
+    } catch (error: unknown) {
+        next(error);
     }
+
 };
 
-const refresh = async (req: Request, res: Response) => {
+const refresh = async ( req: Request, res: Response, next: NextFunction ) => {
     try{
 
     }catch(error){
@@ -61,7 +60,7 @@ const refresh = async (req: Request, res: Response) => {
     }
 }
 
-const getUsers = async (req: Request, res: Response) => {
+const getUsers = async ( req: Request, res: Response, next: NextFunction ) => {
     try{
 
     }catch(error){

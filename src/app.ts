@@ -6,6 +6,7 @@ import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import { sequelize } from './db'; 
 import mainRouter from './router';
+import errorMiddleware from './middleware/error-middleware';
 
 const PORT = process.env.PORT || 5000;
 const app = express();
@@ -15,6 +16,8 @@ app.use(express.json());
 app.use(cookieParser());
 
 app.use('/', mainRouter);
+app.use(errorMiddleware);
+
 
 const start = async () => {
     try {

@@ -4,13 +4,15 @@ import * as uuid from 'uuid';
 import tokenService from './token-service';
 import { UserDto } from '../dtos/user-dto';
 import mailService from './mail-service';
+import ApiError from '../exceptions/api-error';
+
 
 
 class UserService {
     async registration(email: string, password: string, name: string, telefon: string){
         const candidate = await userModel.findOne({where: {email}});
         if(candidate) {
-            throw new Error(`Utilizator cu email-ul ${email} este deja inregistrat.`);
+            throw ApiError.BadRequest(`Utilizator cu email-ul ${email} este deja inregistrat.`);
         }
 
         const hashPassword = await bcrypt.hash(password, 3);
@@ -38,7 +40,7 @@ class UserService {
     async activate(activationLink: string){
         const user = await userModel.findOne({where: {activationLink}})
         if(!user){
-            throw new Error('Incorecta lincul de activare')
+            throw ApiError.BadRequest('Incorecta lincul de activare')
         }
         user.isActivated = true;
         await user.save();
