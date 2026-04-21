@@ -1,5 +1,5 @@
 import { Router } from "express";
-import {register} from '../controllers/auth.controller'
+import {register, activate} from '../controllers/auth.controller'
 import { regValidator } from "../middleware/reg.middleware";
 
 
@@ -9,7 +9,7 @@ auth.post('/reg', regValidator, register);
 // auth.post('/login');
 // auth.post('/logout');
 // auth.get('/refresh');
-// auth.get('/activate/:link');
+auth.get('/activate/:link', activate);
 // auth.get('/users');
 
 export default auth;

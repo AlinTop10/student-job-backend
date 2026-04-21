@@ -28,11 +28,21 @@ class UserService {
         const token = tokenService.generateTokens({...userDto});
         await tokenService.saveToken(userDto.id, token.refreshToken);
 
-        await mailService.sendActivationMail(email, `${process.env.API_URL}/api/activate/${activationLink}`);
+        await mailService.sendActivationMail(email, `${process.env.API_URL}/auth/activate/${activationLink}`);
 
        
 
         return { ...token, user: userDto }       
+    }
+
+    async activate(activationLink: string){
+        const user = await userModel.findOne({where: {activationLink}})
+        if(!user){
+            throw new Error('Incorecta lincul de activare')
+        }
+        user.isActivated = true;
+        await user.save();
+        console.log('User activat');
     }
 }
 

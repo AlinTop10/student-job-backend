@@ -40,13 +40,18 @@ const logout = async (req: Request, res: Response) => {
     }
 }
 
-const activate = async (req: Request, res: Response) => {
-    try{
+const activate = async (req: Request<{ link: string }>, res: Response) => {
+    try {
+        const activationLink = req.params.link;
+        await userService.activate(activationLink);
 
-    }catch(error){
-
+        return res.redirect(process.env.CLIENT_URL || 'https://www.youtube.com')
+    } catch (error) {
+        return res.status(400).json({
+            message: (error as Error).message
+        });
     }
-}
+};
 
 const refresh = async (req: Request, res: Response) => {
     try{
@@ -64,4 +69,4 @@ const getUsers = async (req: Request, res: Response) => {
     }
 }
 
-export { register }
+export { register, activate }
