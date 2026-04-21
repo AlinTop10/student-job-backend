@@ -26,9 +26,18 @@ const register = async ( req: Request, res: Response, next: NextFunction ) => {
 
 const login = async ( req: Request, res: Response, next: NextFunction ) => {
     try{
+        const { email, password } = req.body;
 
-    }catch(error){
+        const userData = await userService.login(email, password);
+        
+        res.cookie('refreshToken', userData.refreshToken, {
+            maxAge: 30 * 24 * 60 * 60 * 1000,
+            httpOnly: true
+        })
+        return res.json(userData);
 
+    } catch (error: unknown) {
+        next(error);
     }
 }
 
@@ -68,4 +77,4 @@ const getUsers = async ( req: Request, res: Response, next: NextFunction ) => {
     }
 }
 
-export { register, activate }
+export { register, activate, login }

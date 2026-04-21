@@ -46,6 +46,22 @@ class UserService {
         await user.save();
         console.log('User activat');
     }
+
+    async login(email: string, password: string){
+        const user = await userModel.findOne({where: {email}})
+        if(!user){
+            throw ApiError.BadRequest('Utilizator inexistent');
+        }
+        const isPassEquals = await bcrypt.compare(password, user.password);
+        if(!isPassEquals){
+            throw ApiError.BadRequest('Parola gresita');
+        }
+        const userDto = new UserDto(user);
+        const token = tokenService.generateTokens({...userDto});
+
+        await tokenService.saveToken(userDto.id, token.refreshToken);
+        return { ...token, user: userDto }   
+    }
 }
 
 export default new UserService();
