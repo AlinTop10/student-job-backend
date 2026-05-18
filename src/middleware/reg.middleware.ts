@@ -9,7 +9,10 @@ const regValidator =[
     (req: Request, res: Response, next: NextFunction) => {
         const error = validationResult(req);
         if(!error.isEmpty()){
-            return res.json({error: error.array()});
+            return res.status(400).json({
+                message: error.array()[0].msg,
+                errors: error.array()
+            });
         }
         next();
     }
