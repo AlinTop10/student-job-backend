@@ -25,14 +25,12 @@ const register = async ( req: Request, res: Response, next: NextFunction ) => {
 const login = async ( req: Request, res: Response, next: NextFunction ) => {
     try{
         const { email, password } = req.body;
-        console.log(req.body);
         const userData = await userService.login(email, password);
         
         res.cookie('refreshToken', userData.refreshToken, {
             maxAge: 30 * 24 * 60 * 60 * 1000,
             httpOnly: true
         })
-        console.log("e ok");
         return res.json(userData);
 
     } catch (error: unknown) {
