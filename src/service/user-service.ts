@@ -42,6 +42,7 @@ class UserService {
         if(!user){
             throw ApiError.BadRequest('Incorecta lincul de activare')
         }
+        console.log("User gasit:", user?.email);
         user.isActivated = true;
         await user.save();
         console.log('User activat');
