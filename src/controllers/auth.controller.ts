@@ -54,7 +54,7 @@ const activate = async (req: Request<{ link: string }>, res: Response, next: Nex
         const activationLink = req.params.link;
         await userService.activate(activationLink);
         console.log("Link primit:", activationLink);
-        return res.redirect(process.env.CLIENT_URL || 'https://www.youtube.com')
+        return res.redirect(process.env.CLIENT_URL || 'http://localhost:3000/activated')
     } catch (error: unknown) {
         next(error);
     }
