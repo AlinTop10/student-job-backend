@@ -1,6 +1,8 @@
 import { Cerere } from "../models/cereri_model";
 import ApiError from "../exceptions/api-error";
 import claimTokenService from "../service/claim-token-service";
+import telegramService from "../service/telegram-service";
+
 
 
 class CerereService {
@@ -41,6 +43,8 @@ class CerereService {
     const claimToken = await claimTokenService.createToken(cerere.idCerere);
 
     const claimLink = `${process.env.CLIENT_URL}/claim/${claimToken.token}`;
+
+    await telegramService.sendNewCerereMessage(cerere, claimLink);
 
     return {
       cerere,
