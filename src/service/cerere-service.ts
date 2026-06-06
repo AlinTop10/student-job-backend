@@ -1,5 +1,7 @@
 import { Cerere } from "../models/cereri_model";
 import ApiError from "../exceptions/api-error";
+import claimTokenService from "../service/claim-token-service";
+
 
 class CerereService {
   async create(data: any) {
@@ -36,7 +38,15 @@ class CerereService {
       statusCerere: "OPEN"
     });
 
-    return cerere;
+    const claimToken = await claimTokenService.createToken(cerere.idCerere);
+
+    const claimLink = `${process.env.CLIENT_URL}/claim/${claimToken.token}`;
+
+    return {
+      cerere,
+      claimToken,
+      claimLink
+    };
   }
 }
 
