@@ -6,6 +6,13 @@ import telegramService from "../service/telegram-service";
 
 
 class CerereService {
+  async getByUser(idUser: number) {
+      return await Cerere.findAll({
+        where: { idUser },
+        order: [['created_at', 'DESC']]
+      });
+  }
+
   async create(data: any) {
     const {
       idUser,

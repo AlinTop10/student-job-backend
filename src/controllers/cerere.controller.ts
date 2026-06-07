@@ -12,4 +12,22 @@ const createCerere = async (req: Request, res: Response, next: NextFunction) => 
     }
 }
 
-export { createCerere };
+const getUserCereri = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    try {
+        const { idUser } = req.params;
+
+        const cereri =
+            await cerereService.getByUser(Number(idUser));
+
+        return res.json(cereri);
+
+    } catch (error) {
+        next(error);
+    }
+}
+
+export { createCerere, getUserCereri };
