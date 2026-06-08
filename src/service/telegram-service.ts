@@ -35,6 +35,7 @@ class TelegramService {
 📌 <b>CERERE NOUĂ</b>
 
 📝 <b>Detalii:</b> ${cerere.detalii}
+📍 <b>Locație:</b> ${cerere.locatie}
 👥 <b>Persoane:</b> ${cerere.nr_persoane}
 🕒 <b>Când:</b> ${dataFormatata}
 💰 <b>Plată:</b> ${cerere.plata} ${cerere.moneda}

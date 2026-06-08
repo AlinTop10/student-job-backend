@@ -11,6 +11,7 @@ class Cerere extends Model<InferAttributes<Cerere>, InferCreationAttributes<Cere
   declare idCerere: CreationOptional<number>;
   declare idUser: number;
   declare detalii: string;
+  declare locatie: string;
   declare nr_persoane: number;
   declare ora: Date;
   declare plata: number;
@@ -35,6 +36,11 @@ Cerere.init(
 
     detalii: {
       type: DataTypes.TEXT,
+      allowNull: false,
+    },
+    
+    locatie: {
+      type: DataTypes.STRING(255),
       allowNull: false,
     },
 

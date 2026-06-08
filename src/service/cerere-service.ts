@@ -17,6 +17,7 @@ class CerereService {
     const {
       idUser,
       detalii,
+      locatie,
       nr_persoane,
       ora,
       plata,
@@ -24,7 +25,7 @@ class CerereService {
       preferinta_gender
     } = data;
 
-    if (!idUser || !detalii || !nr_persoane || !ora || !plata) {
+    if (!idUser || !detalii || !locatie || !nr_persoane || !ora || !plata) {
       throw ApiError.BadRequest("Completează toate câmpurile obligatorii.");
     }
 
@@ -39,6 +40,7 @@ class CerereService {
     const cerere = await Cerere.create({
       idUser,
       detalii,
+      locatie,
       nr_persoane,
       ora,
       plata,
