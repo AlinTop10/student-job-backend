@@ -23,6 +23,7 @@
     "mysql2": "^3.19.1",
     "nodemailer": "^8.0.4",
     "sequelize": "^6.37.8",
+    "stripe": "^22.2.0",
     "uuid": "^13.0.0"
   },
   "devDependencies": {
