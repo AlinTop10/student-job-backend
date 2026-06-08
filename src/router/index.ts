@@ -2,7 +2,7 @@ import { Router } from 'express';
 import auth from './auth.router';
 import user from './user.router';
 import cerere from './cerere.router';
-
+import claim from "./claim.router";
 
 const router = Router();
 
@@ -13,6 +13,7 @@ router.get('/', (req, res) => {
 router.use('/auth', auth);
 router.use('/user', user);
 router.use('/cereri', cerere);
+router.use("/claim", claim);
 
 
 
