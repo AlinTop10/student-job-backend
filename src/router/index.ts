@@ -3,7 +3,7 @@ import auth from './auth.router';
 import user from './user.router';
 import cerere from './cerere.router';
 import claim from "./claim.router";
-import payment from "./payment.router";
+import paypal from "./paypal.router";
 
 const router = Router();
 
@@ -15,7 +15,7 @@ router.use('/auth', auth);
 router.use('/user', user);
 router.use('/cereri', cerere);
 router.use("/claim", claim);
-router.use("/payment", payment);
+router.use("/paypal", paypal);
 
 
 export default router;
