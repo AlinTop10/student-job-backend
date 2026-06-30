@@ -87,6 +87,43 @@ class UserService {
         await tokenService.saveToken(userDto.id, token.refreshToken);
         return { ...token, user: userDto }
     }
+
+    async updateProfile(idUser: number, nume?: string, telefon?: string) {
+        const user = await userModel.findOne({
+            where: { idUser },
+        });
+
+        if (!user) {
+            throw ApiError.BadRequest("Utilizatorul nu a fost găsit.");
+        }
+
+        if (!nume && !telefon) {
+            throw ApiError.BadRequest("Nu ai introdus nicio modificare.");
+        }
+
+        if (nume) {
+            user.nume = nume;
+        }
+
+        if (telefon) {
+            const phoneRegex = /^(\+40|0)\d{9}$/;
+
+            if (!phoneRegex.test(telefon)) {
+            throw ApiError.BadRequest("Numărul de telefon nu este valid.");
+            }
+
+            user.telefon = telefon;
+        }
+
+        await user.save();
+
+        const userDto = new UserDto(user);
+
+        return {
+            message: "Profilul a fost actualizat.",
+            user: userDto,
+        };
+    }
 }
 
 export default new UserService();

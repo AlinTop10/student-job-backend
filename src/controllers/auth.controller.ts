@@ -2,7 +2,8 @@ import { Request, Response,  NextFunction } from "express";
 import { User } from "../models/user_model";
 import { error } from "node:console";
 import bcrypt from "bcrypt";
-import userService from '../service/user-service';import { nextTick } from "node:process";
+import userService from '../service/user-service';
+import { nextTick } from "node:process";
 ;
 
 

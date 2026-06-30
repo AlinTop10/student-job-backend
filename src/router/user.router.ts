@@ -1,10 +1,8 @@
 import { Router } from "express";
+import { updateProfile } from "../controllers/user.controller";
 
 const user = Router();
 
-
-user.get('/', (req, res) => {
-    res.json({ message: "Routerul secundar funcționează!" });
-});
+user.patch("/update-profile", updateProfile);
 
 export default user;
