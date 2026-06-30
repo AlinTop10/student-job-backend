@@ -1,9 +1,8 @@
 import axios from "axios";
 
 class TelegramService {
-  async sendMessage(text: string) {
+  private async sendMessage(chatId: string, text: string, replyMarkup?: any) {
     const botToken = process.env.TELEGRAM_BOT_TOKEN;
-    const chatId = process.env.TELEGRAM_CHAT_ID;
 
     if (!botToken || !chatId) {
       console.log("Telegram nu este configurat în .env");
@@ -14,12 +13,12 @@ class TelegramService {
       chat_id: chatId,
       text,
       parse_mode: "HTML",
-      disable_web_page_preview: true
+      disable_web_page_preview: true,
+      reply_markup: replyMarkup,
     });
   }
 
-  
-  async sendNewCerereMessage(cerere: any, claimLink: string) {
+  private formatCerereMessage(cerere: any, claimLink: string) {
     const dataCerere = new Date(cerere.ora);
 
     const dataFormatata = dataCerere.toLocaleString("ro-RO", {
@@ -28,10 +27,10 @@ class TelegramService {
       month: "long",
       year: "numeric",
       hour: "2-digit",
-      minute: "2-digit"
+      minute: "2-digit",
     });
 
-     const message = `
+    return `
 📌 <b>CERERE NOUĂ</b>
 
 📝 <b>Detalii:</b> ${cerere.detalii}
@@ -44,8 +43,64 @@ class TelegramService {
 ✅ <b>Ia lucrarea aici:</b>
 ${claimLink}
 `;
+  }
 
-    await this.sendMessage(message);
+  async sendPublicCerereMessage(cerere: any, claimLink: string) {
+    const publicChatId = process.env.TELEGRAM_PUBLIC_CHAT_ID;
+
+    if (!publicChatId) {
+      console.log("TELEGRAM_PUBLIC_CHAT_ID lipsește în .env");
+      return;
+    }
+
+    const message = this.formatCerereMessage(cerere, claimLink);
+
+    await this.sendMessage(publicChatId, message);
+  }
+
+  async sendAdminReviewMessage(cerere: any, claimLink: string) {
+    const adminChatId = process.env.TELEGRAM_ADMIN_CHAT_ID;
+
+    if (!adminChatId) {
+      console.log("TELEGRAM_ADMIN_CHAT_ID lipsește în .env");
+      return;
+    }
+
+    const message = `
+🛡️ <b>CERERE PENTRU APROBARE</b>
+
+${this.formatCerereMessage(cerere, claimLink)}
+
+📌 <b>Status:</b> Așteaptă aprobarea adminului.
+`;
+
+    const keyboard = {
+      inline_keyboard: [
+        [
+          {
+            text: "✅ Postează",
+            callback_data: `publish_${cerere.idCerere}`,
+          },
+        ],
+      ],
+    };
+
+    await this.sendMessage(adminChatId, message, keyboard);
+  }
+
+  async answerCallbackQuery(callbackQueryId: string, text: string) {
+    const botToken = process.env.TELEGRAM_BOT_TOKEN;
+
+    if (!botToken) {
+      console.log("TELEGRAM_BOT_TOKEN lipsește.");
+      return;
+    }
+
+    await axios.post(`https://api.telegram.org/bot${botToken}/answerCallbackQuery`, {
+      callback_query_id: callbackQueryId,
+      text,
+      show_alert: false,
+    });
   }
 }
 

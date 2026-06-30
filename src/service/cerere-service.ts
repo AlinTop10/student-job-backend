@@ -46,19 +46,72 @@ class CerereService {
       plata,
       moneda: moneda || "RON",
       preferinta_gender: preferinta_gender || "ORICARE",
-      statusCerere: "OPEN"
+      statusCerere: "PENDING_APPROVAL"
     });
 
     const claimToken = await claimTokenService.createToken(cerere.idCerere);
 
     const claimLink = `${process.env.CLIENT_URL}/claim/${claimToken.token}`;
 
-    await telegramService.sendNewCerereMessage(cerere, claimLink);
+    await telegramService.sendAdminReviewMessage(cerere, claimLink);
 
     return {
       cerere,
       claimToken,
       claimLink
+    };
+  }
+
+  async cancel(idCerere: number, idUser: number) {
+    const cerere = await Cerere.findOne({
+      where: {
+        idCerere,
+        idUser,
+      },
+    });
+
+    if (!cerere) {
+      throw ApiError.BadRequest("Cererea nu a fost găsită.");
+    }
+
+    if (cerere.statusCerere !== "OPEN") {
+      throw ApiError.BadRequest("Poți anula doar cererile care sunt încă deschise.");
+    }
+
+    cerere.statusCerere = "CANCELLED";
+    await cerere.save();
+
+    return {
+      message: "Cererea a fost anulată.",
+      cerere,
+    };
+  }
+
+  async approve(idCerere: number) {
+    const cerere = await Cerere.findOne({
+      where: { idCerere },
+    });
+
+    if (!cerere) {
+      throw ApiError.BadRequest("Cererea nu există.");
+    }
+
+    if (cerere.statusCerere !== "PENDING_APPROVAL") {
+      throw ApiError.BadRequest("Cererea nu este în așteptare pentru aprobare.");
+    }
+
+    cerere.statusCerere = "OPEN";
+    await cerere.save();
+
+    const claimToken = await claimTokenService.getByCerereId(cerere.idCerere);
+
+    const claimLink = `${process.env.CLIENT_URL}/claim/${claimToken.token}`;
+
+    await telegramService.sendPublicCerereMessage(cerere, claimLink);
+
+    return {
+      message: "Cererea a fost publicată.",
+      cerere,
     };
   }
 }

@@ -1,5 +1,6 @@
 import * as uuid from "uuid";
 import { ClaimToken } from "../models/claim_tokens";
+import ApiError from "../exceptions/api-error";
 
 class ClaimTokenService {
   async createToken(idCerere: number) {
@@ -27,6 +28,18 @@ class ClaimTokenService {
     return await ClaimToken.findOne({
       where: { idCerere }
     });
+  }
+
+  async getByCerereId(idCerere: number) {
+    const token = await ClaimToken.findOne({
+      where: { idCerere },
+    });
+
+    if (!token) {
+      throw ApiError.BadRequest("Tokenul cererii nu există.");
+    }
+
+    return token;
   }
 }
 

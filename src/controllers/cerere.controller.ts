@@ -30,4 +30,16 @@ const getUserCereri = async (
     }
 }
 
-export { createCerere, getUserCereri };
+const cancelCerere = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { idCerere, idUser } = req.body;
+
+    const data = await cerereService.cancel(Number(idCerere), Number(idUser));
+
+    return res.json(data);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export { createCerere, getUserCereri, cancelCerere };

@@ -4,6 +4,7 @@ import user from './user.router';
 import cerere from './cerere.router';
 import claim from "./claim.router";
 import paypal from "./paypal.router";
+import telegram from "./telegram.router";
 
 const router = Router();
 
@@ -16,6 +17,7 @@ router.use('/user', user);
 router.use('/cereri', cerere);
 router.use("/claim", claim);
 router.use("/paypal", paypal);
+router.use("/telegram", telegram);
 
 
 export default router;

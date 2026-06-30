@@ -17,7 +17,7 @@ class Cerere extends Model<InferAttributes<Cerere>, InferCreationAttributes<Cere
   declare plata: number;
   declare moneda: CreationOptional<string>;
   declare preferinta_gender: CreationOptional<"ORICARE" | "DOAR_FETE" | "DOAR_BAIETI">;
-  declare statusCerere: CreationOptional<"OPEN" | "RESERVED" | "AWAITING_PAYMENT" | "PAID" | "CANCELLED" | "DONE">;
+  declare statusCerere: CreationOptional<"OPEN" | "RESERVED" | "AWAITING_PAYMENT" | "PAID" | "CANCELLED" | "DONE" | "PENDING_APPROVAL">;
   declare created_at: CreationOptional<Date>;
 }
 
@@ -78,7 +78,8 @@ Cerere.init(
         "AWAITING_PAYMENT",
         "PAID",
         "CANCELLED",
-        "DONE"
+        "DONE",
+        "PENDING_APPROVAL"
       ),
       allowNull: false,
       defaultValue: "OPEN",
